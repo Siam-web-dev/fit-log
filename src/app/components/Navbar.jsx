@@ -1,9 +1,13 @@
+"use client"
+
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import logo from "../assets/logo.png" ;
+import { usePlan } from "./context/PlanContext";
 
 const Navbar = () => {
+  const { todaysPlan, savedPlan } = usePlan();
   const link = (
     <>
       <li>
@@ -57,8 +61,8 @@ const Navbar = () => {
           <ul className="menu menu-horizontal px-1">{link}</ul>
         </div>
         <div className="navbar-end gap-8">
-          <a className="">Plan</a> 
-          <a className="">Saved</a> 
+          <a className="">Plan <span className="bg-amber-300 rounded-full px-2 text-black">{todaysPlan.length}</span> </a> 
+          <a className="">Saved <span className="bg-amber-300 rounded-full px-2 text-black" >{savedPlan.length}</span> </a> 
         </div>
       </div>
     </nav>

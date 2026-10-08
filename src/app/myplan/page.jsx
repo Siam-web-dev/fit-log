@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { usePlan } from "../components/context/PlanContext";
 import Image from "next/image";
 import { GoClock, GoX } from "react-icons/go";
@@ -10,7 +10,22 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 
 const MyPlanPage = () => {
-  const { todaysPlan, setTodaysPlan, savedPlan , setSavedPlan } = usePlan();
+  const { todaysPlan, setTodaysPlan, savedPlan, setSavedPlan } = usePlan();
+  const [activeTab, setActiveTab] = useState("today");
+
+  const currentPlan = activeTab === "today" ? todaysPlan : savedPlan;
+
+  const exercises = currentPlan.length;
+
+  const minutes = currentPlan.reduce(
+    (total, workout) => total + Number(workout.duration || 0),
+    0,
+  );
+
+  const calories = currentPlan.reduce(
+    (total, workout) => total + Number(workout.caloriesBurned || 0),
+    0,
+  );
 
   const handleDone = (id) => {
     const updatedPlan = todaysPlan.map((workout) =>
@@ -18,21 +33,16 @@ const MyPlanPage = () => {
     );
 
     setTodaysPlan(updatedPlan);
-    toast.success("Succefully done")
+    toast.success("Succefully done");
   };
 
-
   const handleRemoveSaved = (id) => {
-  const updatedSavedPlan = savedPlan.filter(
-    (workout) => workout.id !== id
-  );
+    const updatedSavedPlan = savedPlan.filter((workout) => workout.id !== id);
 
-  setSavedPlan(updatedSavedPlan);
+    setSavedPlan(updatedSavedPlan);
 
-  toast.success("Removed from saved");
- };
-
-
+    toast.success("Removed from saved");
+  };
 
   return (
     <div className="w-[95%] mx-auto ">
@@ -40,27 +50,31 @@ const MyPlanPage = () => {
       <h1 className="text-2xl font-bold">My Plan</h1>
       <p>Cap of five lifts for today. Finish them, then load more.</p>
       {/* calculations */}
-      <div className="grid grid-cols-3 bg-base-100 rounded-lg my-20">
-        <div>
+
+      <div className="grid grid-cols-3 bg-base-100 rounded-2xl my-20 p-10">
+        <div className="border-r border-amber-50 space-y-3">
           <p>Exercises</p>
-          <h1></h1>
+          <h1 className="text-4xl font-bold text-amber-300 "> {exercises} </h1>
         </div>
-        <div>
+        <div className="border-r border-amber-50 ml-5 space-y-3">
           <p>Minutes</p>
-          <h1></h1>
+          <h1 className="text-4xl font-bold"> {minutes} </h1>
         </div>
-        <div>
+        <div className="ml-5 space-y-3">
           <p>Calories</p>
-          <h1></h1>
+          <h1 className="text-4xl font-bold"> {calories} </h1>
         </div>
       </div>
+
       {/* tabs */}
+
       <div className="tabs tabs-border">
         <input
           type="radio"
           name="my_tabs_2"
           className="tab bg-base-100 rounded-lg mr-5"
           aria-label="Today's Plan"
+          onChange={() => setActiveTab("today")}
         />
         <div className="tab-content border-base-300  p-10">
           <div className="mx-auto">
@@ -130,6 +144,7 @@ const MyPlanPage = () => {
           name="my_tabs_2"
           className="tab bg-base-100 rounded-lg"
           aria-label="Saved"
+          onChange={() => setActiveTab("save")}
           defaultChecked
         />
         <div className="tab-content border-base-300  p-10">
@@ -174,9 +189,10 @@ const MyPlanPage = () => {
                             View Details
                           </button>
                         </Link>
-                        <GoX 
-                        onClick={() => handleRemoveSaved(save.id)}
-                        className="text-3xl" />
+                        <GoX
+                          onClick={() => handleRemoveSaved(save.id)}
+                          className="text-3xl"
+                        />
                       </div>
                     </div>
                   </div>
