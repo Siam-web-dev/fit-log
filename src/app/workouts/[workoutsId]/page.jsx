@@ -1,3 +1,5 @@
+import SaveButton from "@/app/components/SaveButton";
+import WorkoutAction from "@/app/components/WorkoutAction";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -93,8 +95,8 @@ const WorkOutDetailPage = async ({ params }) => {
 
             {/*  */}
           <div className="card-actions">
-            <button className="btn bg-amber-300 text-black "> <BiMessageAltAdd /> Add to todays plan</button>
-            <button className="btn border border-amber-100  "> <FaBookmark /> Save for later</button>
+            <WorkoutAction workOut={workOutData} ></WorkoutAction>
+            <SaveButton saveData= {workOutData} ></SaveButton>
           </div>
         </div>
       </div>
